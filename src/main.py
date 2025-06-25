@@ -63,7 +63,10 @@ def get_step_context(step, session: Session | None = None) -> dict:
 async def handle_validation_exception(request: Request, exc: ValidationError):
     step = re.search("\\d", request.state.template)
     if step:
-        context = get_step_context(int(step.group(0)), sessions[request.session["id"]])
+        context = get_step_context(
+            int(step.group(0)),
+            sessions[request.session["id"]] if Session.is_valid(request.session) else None
+        )
     fields = [error["loc"][1] for error in exc.errors()]
     form_data = await request.form()
     for key in form_data:
