@@ -1,0 +1,17 @@
+<div class="nav-buttons {% if not back %}nav-buttons_reversed{% endif %}">
+    {% if back %}
+    <a
+        class="nav-buttons__back"
+        href="/step-{{ back }}"
+        hx-target="main"
+        hx-push-url="true"
+    >Go Back</a>
+    {% endif %}
+    <button
+        class="nav-buttons__next"
+        hx-post="/step-{{ next }}"
+        hx-target="main"
+        hx-target-error="#form-fields"
+        hx-push-url="true"
+    >{% if next == 4 %}Confirm{% else %}Next Step{% endif %}</button>
+</div>

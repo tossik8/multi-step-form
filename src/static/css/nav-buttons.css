@@ -1,0 +1,48 @@
+.nav-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 1rem;
+    background-color: var(--white);
+}
+
+.nav-buttons_reversed {
+    flex-direction: row-reverse;
+}
+
+.nav-buttons__back,
+.nav-buttons__next {
+    font-family: "Ubuntu";
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.nav-buttons__back {
+    color: var(--grey-500);
+    background: transparent;
+}
+
+.nav-buttons__next {
+    color: var(--white);
+    background-color: var(--blue-950);
+    border-radius: 0.25rem;
+}
+
+@media (hover: hover) {
+    .nav-buttons__back,
+    .nav-buttons__next {
+        cursor: pointer;
+    }
+}
+
+@media screen and (min-width: 767px) {
+    .nav-buttons {
+        position: absolute;
+        padding: var(--padding);
+    }
+}

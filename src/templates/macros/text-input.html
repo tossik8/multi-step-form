@@ -1,0 +1,19 @@
+{% macro text_input(name, placeholder, label, errors, value = "") %}
+<div class="text-input">
+    <div class="text-input__info">
+        <label class="text-input__label" for="{{ name }}">{{ label }}</label>
+        {% if name in errors %}
+        <span class="text-input__error">The field is required</span>
+        {% endif %}
+    </div>
+    <input
+        type="text"
+        class="text-input__input {% if name in errors %}text-input__input_error{% endif %}"
+        id="{{ name }}"
+        name="{{ name }}"
+        autocomplete="{{ name }}"
+        placeholder="{{ placeholder }}"
+        value="{{ value }}"
+    >
+</div>
+{% endmacro %}

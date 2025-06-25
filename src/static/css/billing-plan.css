@@ -1,0 +1,68 @@
+.billing-plan {
+    display: flex;
+    border-radius: 0.25rem;
+    border: 1px solid var(--grey-500);
+    width: 100%;
+    padding: 1rem;
+    position: relative;
+}
+
+.billing-plan:has(.billing-plan__input:checked) {
+    border-color: var(--purple-600);
+    background-color: var(--blue-50);
+}
+
+.billing-plan__input {
+    appearance: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+.billing-plan__content {
+    display: flex;
+    gap: 1rem;
+}
+
+.billing-plan__img {
+    width: min-content;
+    height: min-content;
+}
+
+.billing-plan__label {
+    font-weight: 500;
+}
+
+.billing-plan__price {
+    font-size: 0.85rem;
+    color: var(--grey-500);
+}
+
+.billing-plan__promotion {
+    font-size: 0.75rem;
+}
+
+.billing-plan__label,
+.billing-plan__promotion {
+    color: var(--blue-950);
+}
+
+@media (hover: hover) {
+    .billing-plan__input {
+        cursor: pointer;
+    }
+    
+    .billing-plan:hover {
+        border-color: var(--purple-600);
+    }
+}
+
+@media screen and (min-width: 767px) {
+    .billing-plan__content {
+        flex-direction: column;
+        gap: 3rem;
+    }
+}

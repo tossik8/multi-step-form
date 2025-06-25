@@ -1,0 +1,130 @@
+:root {
+    --blue-950: hsl(213, 96%, 18%);
+    --purple-600: hsl(243, 100%, 62%);
+    --blue-300: hsl(228, 100%, 84%);
+    --blue-200: hsl(206, 94%, 87%);
+    --red-500: hsl(354, 84%, 57%);
+    --grey-500: hsl(231, 11%, 63%);
+    --purple-200: hsl(229, 24%, 87%);
+    --blue-100: hsl(218, 100%, 97%);
+    --blue-50: hsl(231, 100%, 99%);
+    --white: hsl(0, 100%, 100%);
+    --desktop-bp: 767px;
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url(../fonts/Ubuntu-Regular.ttf) format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url(../fonts/Ubuntu-Medium.ttf) format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url(../fonts/Ubuntu-Bold.ttf) format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Ubuntu";
+    background-color: var(--blue-100);
+}
+
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.form-container {
+    position: relative;
+    top: 6.2rem;
+    background-color: var(--white);
+    border-radius: 1rem;
+    padding: 2rem 1rem;
+    width: 90%;
+    margin: 0 auto;
+    box-shadow: 0 0.25rem 1rem -0.5rem var(--grey-500) ;
+}
+
+.sidebar {
+    background: no-repeat url(../images/bg-sidebar-mobile.svg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+    background-size: cover;
+    margin: 0 auto;
+    height: 172px;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding-top: 2rem;   
+}
+
+.content__title {
+    color: var(--blue-950);
+}
+
+.content__description {
+    color: var(--grey-500);
+    margin: 1rem 0;
+}
+
+#form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+
+@media screen and (min-width: 767px) {
+
+    .form-container {
+        padding: 1rem;
+        display: flex;
+        height: 600px;
+    }
+
+    .sidebar {
+        z-index: 0;
+        max-width: 274px;
+        margin: unset;
+        position: unset;
+        background-image: url(../images/bg-sidebar-desktop.svg);
+        background-size: contain;
+        height: unset;
+        flex-direction: column;
+        justify-content: unset;
+        padding: 2rem;
+        gap: 2rem;
+    }
+
+    .content {
+        --padding: 0 4rem;
+        flex: 1;
+        position: relative;
+        margin-top: 3rem;
+        padding: var(--padding);
+    }
+
+    .billing-plans {
+        display: flex;
+        gap: 1rem;
+    }
+
+}

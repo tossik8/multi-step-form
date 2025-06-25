@@ -1,0 +1,27 @@
+{% from "macros/price.html" import price %}
+<div class="content">
+    <h1 class="content__title">Finishing Up</h1>
+    <p class="content__description">Double-check everything looks OK before confirming.</p>
+    <div class="summary">
+        <div class="summary__items">
+            <div class="summary__plan">
+                <p class="summary__plan-title">{{ data._plan.name }} ({% if data.yearly %}Yearly{% else %}Montly{% endif %})</p>
+                <p class="summary__plan-price">{{ price(data._plan.price, data.yearly) }}</p>
+            </div>
+            <hr class="summary__divider">
+            <div class="summary__add-ons">
+                {% for add_on in data._add_ons %}
+                <div class="summary__add-on">
+                    <p class="summary__add-on-title">{{ add_on.title }}</p>
+                    <p class="summary__add-on-price">{{ price(add_on.price, data.yearly, true) }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="summary__total">
+            <p class="summary__total-text">Total (per {% if data.yearly %}year{% else %}month{% endif %})</p>
+            <p class="summary__total-price">{{ price(total, data.yearly) }}</p>
+        </div>
+        {% include "nav-buttons.html" %}
+    </div>
+</div>

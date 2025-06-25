@@ -1,0 +1,17 @@
+<div class="toggle-container">
+    <span class="toggle-container__span {% if not yearly %}toggle-container__span_active{% endif %}">Monthly</span>
+    <div class="toggle">
+        <input
+            type="checkbox"
+            id="toggle"
+            name="yearly"
+            class="toggle__input"
+            {% if yearly %}checked{% endif %} 
+            hx-get="/step-2"
+            hx-target="#form-fields"
+            hx-include="previous input:checked"
+        />
+        <label for="toggle" class="toggle__label"><span>Toggle</span></label>
+    </div>
+    <span class="toggle-container__span {% if yearly %}toggle-container__span_active{% endif %}">Yearly</span>
+</div>

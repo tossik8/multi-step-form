@@ -1,0 +1,15 @@
+<div class="content">
+    <h1 class="content__title">Personal info</h1>
+    <p class="content__description">Please provide your name, email address, and phone number.</p>
+    <form>
+        <div id="form-fields" class="personal-info-fields">
+            {% block form_fields %}
+            {% from "macros/text-input.html" import text_input %}
+            {{ text_input("name", "e.g. Stephen King", "Name", errors, data.name if data) }}
+            {{ text_input("email", "e.g. stephenking@lorem.com", "Email Address", errors, data.email if data) }}
+            {{ text_input("tel", "e.g. +1 234 567 890", "Phone Number", errors, data.tel if data) }}
+            {% endblock %}
+        </div>
+        {% include "nav-buttons.html" %}
+    </form>
+</div>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="htmx-config" content='{
+        "responseHandling": [
+            {"code":"204", "swap": false},
+            {"code":"[23]..", "swap": true},
+            {"code": 422, "swap": true}
+        ]
+    }'>
+    <title>Frontend Mentor | Multi-step form</title>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', path='images/favicon-32x32.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/nav-buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/step.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/toggle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/billing-plan.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/text-input.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/add-on.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/summary.css') }}">
+    <script defer src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/htmx-ext-response-targets@2.0.2" integrity="sha384-NtTh9TBZ2X/pFpfsVvQOjSsYWmjmqG6h5ioQWVAe2/j3AuTHRmfqvoqp+iOed+I0" crossorigin="anonymous"></script>
+</head>
+<body hx-boost="true" hx-ext="response-targets">
+    <main>
+        {% block main_content %}
+        {% from "macros/step.html" import step %}
+        <div id="form-container" class="form-container">
+            <aside class="sidebar">
+                {{ step(1, "Your info", next == 1) }}
+                {{ step(2, "Select plan", next == 2) }}
+                {{ step(3, "Add-ons", next == 3) }}
+                {{ step(4, "Summary", next == 4) }}
+            </aside>
+            {% include form_step_template %}
+        </div>
+        {% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<div class="content">
+    <h1 class="content__title">Pick add-ons</h1>
+    <p class="content__description">Add-ons help enchance your gaming experience.</p>
+    <form>
+        {% block form_fields %}
+        {% from "macros/price.html" import price %}
+        <div id="form-fields">
+            {% for add_on in add_ons %}
+            <div class="add-on">
+                <input
+                    id="{{ add_on.id }}"
+                    type="checkbox"
+                    name="add_ons"
+                    value="{{ add_on.id }}"
+                    {% if add_on.id in data.add_on_ids %}checked{% endif %}
+                    class="add-on__input">
+                <div class="add-on__details">
+                    <label for="{{ add_on.id }}" class="add-on__title">{{ add_on.title }}</label>
+                    <p class="add-on__description">{{ add_on.description }}</p>
+                </div>
+                <p class="add-on__price">{{ price(add_on.price, data.yearly, true) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endblock %}
+        {% include 'nav-buttons.html' %}
+    </form>
+</div>

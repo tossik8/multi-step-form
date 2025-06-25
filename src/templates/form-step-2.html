@@ -1,0 +1,39 @@
+<div class="content">
+    <h1 class="content__title">Select your plan</h1>
+    <p class="content__description">You have the option of monthly or yearly billing.</p>
+    <form>
+        {% block form_fields %}
+        {% from "macros/price.html" import price %}
+        <div id="form-fields" class="billing-plan-fields">
+            <div class="billing-plans">
+                {% for plan in plans %}
+                <div class="billing-plan">
+                    <input
+                        class="billing-plan__input"
+                        type="radio"
+                        id="{{ plan.name }}"
+                        name="plan"
+                        value="{{ plan.id }}"
+                        {% if plan_id == plan.id %}
+                        checked
+                        {% endif %}
+                    >
+                    <div class="billing-plan__content">
+                        <img src="{{ url_for('static', path=plan.img) }}" alt="" class="billing-plan__img">
+                        <div>
+                            <label class="billing-plan__label" for="{{ plan.name }}">{{ plan.name }}</label>
+                            <p class="billing-plan__price">
+                                {{ price(plan.price, yearly) }}
+                            </p>
+                            {% if yearly %}<p class="billing-plan__promotion">2 months free</p>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% include 'toggle.html' %}
+        </div>
+        {% endblock %}
+        {% include 'nav-buttons.html' %}
+    </form>
+</div>

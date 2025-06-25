@@ -1,0 +1,3 @@
+{% macro price(price, yearly, with_plus = false) %}
+{%if with_plus %}+{% endif %}${{ (price.yearly | string) + "/yr" if yearly else (price.monthly | string) + "/mo" }}
+{% endmacro %}

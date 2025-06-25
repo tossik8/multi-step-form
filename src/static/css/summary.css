@@ -1,0 +1,49 @@
+.summary__items {
+    background-color: var(--blue-100);
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.summary__plan,
+.summary__add-on,
+.summary__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary__plan-title,
+.summary__plan-price {
+    font-weight: 500;
+}
+
+.summary__plan-title,
+.summary__plan-price,
+.summary__add-on-price {
+    color: var(--blue-950);
+}
+
+.summary__divider {
+    border-color: var(--grey-500);
+    margin: 1rem 0;
+}
+
+.summary__add-ons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.summary__add-on-title,
+.summary__total-text {
+    color: var(--grey-500);
+}
+
+.summary__total {
+    padding: 1rem;
+}
+
+.summary__total-price {
+    color: var(--purple-600);
+    font-weight: 700;
+}

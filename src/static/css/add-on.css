@@ -1,0 +1,41 @@
+.add-on {
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid var(--grey-500);
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.add-on:has(.add-on__input:checked) {
+    border-color: var(--purple-600);
+    background-color: var(--blue-50);
+}
+
+.add-on__input {
+    --size: 1rem;
+    width: var(--size);
+    height: var(--size);
+}
+
+.add-on__input:checked {
+    accent-color: var(--purple-600);
+}
+
+.add-on__details {
+    flex: 1;
+}
+
+.add-on__title {
+    color: var(--blue-950);
+    font-weight: 500;
+}
+
+.add-on__description {
+    color: var(--grey-500);
+    font-size: 0.75rem;
+}
+
+.add-on__price {
+    color: var(--purple-600);
+}

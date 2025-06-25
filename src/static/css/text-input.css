@@ -1,0 +1,40 @@
+.text-input__info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-input__label,
+.text-input__error {
+    font-size: 0.75rem;
+}
+
+.text-input__label {
+    color: var(--blue-950);
+    margin-bottom: 0.25rem;
+}
+
+.text-input__error {
+    color: var(--red-500);
+    font-weight: 500;
+}
+
+.text-input__input {
+    outline: none;
+    font-weight: 700;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--grey-500);
+    width: 100%;
+}
+
+.text-input__input_error {
+    border-color: var(--red-500);
+}
+
+.text-input__input::placeholder {
+    color: var(--grey-500);
+}
+
+.text-input__input:focus {
+    border-color: var(--purple-600);
+}
