@@ -103,6 +103,12 @@ main {
     margin: 0;
 }
 
+.billing-plans {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 #form-fields {
     display: flex;
     flex-direction: column;
@@ -145,8 +151,7 @@ main {
     }
 
     .billing-plans {
-        display: flex;
-        gap: 1rem;
+        flex-direction: row;
     }
 
 }
