@@ -13,7 +13,7 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic import StringConstraints, ValidationError
 
-from session import sessions, Session, clear_inactive_sessions, is_session_valid
+from session import sessions, Session, clear_inactive_sessions
 from data import get_plans, get_add_ons
 
 ROOT_DIR = Path(__file__).resolve().parent
@@ -80,7 +80,7 @@ async def handle_validation_exception(request: Request, exc: ValidationError):
 
 @app.get("/step-1", response_class=HTMLResponse)
 async def step1(request: Request):
-    if is_session_valid(request.session):
+    if Session.is_valid(request.session):
         session = sessions[request.session["id"]]
         session.update_last_activity_time()
         context = get_step_context(1, session)
@@ -109,7 +109,7 @@ async def submit_personal_info(
     tel: Annotated[TrimmedStr, Form()],
     _ = Depends(set_error_template("form-step-1.html"))
 ):
-    if is_session_valid(request.session):
+    if Session.is_valid(request.session):
         session_id = request.session["id"]
         sessions[session_id].update_last_activity_time()
     else:
@@ -121,7 +121,7 @@ async def submit_personal_info(
 
 @app.get("/step-2", response_class=HTMLResponse)
 async def step2(request: Request, plan: int = 1, yearly: bool = False):
-    if not is_session_valid(request.session):
+    if not Session.is_valid(request.session):
         return RedirectResponse("/step-1", status_code=303)
     session = sessions[request.session["id"]]
     session.update_last_activity_time()
@@ -153,7 +153,7 @@ async def submit_billing_plan(
     plan_id: Annotated[int, Form(alias="plan", validation_alias="plan")],
     yearly: Annotated[bool, Form()] = False
 ):
-    if not is_session_valid(request.session):
+    if not Session.is_valid(request.session):
         return "/step-1"
     session = sessions[request.session["id"]]
     session.update_last_activity_time()
@@ -165,7 +165,7 @@ async def submit_billing_plan(
 
 @app.get("/step-3", response_class=HTMLResponse)
 async def step3(request: Request):
-    if not is_session_valid(request.session):
+    if not Session.is_valid(request.session, 3):
         return RedirectResponse("/step-1", status_code=303)
     session = sessions[request.session["id"]]
     session.update_last_activity_time()
@@ -187,7 +187,7 @@ async def submit_add_ons(
     request: Request,
     selected_add_ons: Annotated[list[int], Form(alias="add_ons", validation_alias="add_ons")] = []
 ):
-    if not is_session_valid(request.session):
+    if not Session.is_valid(request.session, 3):
         return RedirectResponse("/step-1", status_code=303)
     session = sessions[request.session["id"]]
     session.add_on_ids = selected_add_ons
@@ -197,7 +197,7 @@ async def submit_add_ons(
 
 @app.get("/step-4", response_class=HTMLResponse)
 async def step4(request: Request):
-    if not is_session_valid(request.session):
+    if not Session.is_valid(request.session, 4):
         return RedirectResponse("/step-1", status_code=303)
     session = sessions[request.session["id"]]
     context = get_step_context(4, session)
@@ -216,11 +216,16 @@ async def step4(request: Request):
 
 @app.post("/step-4", status_code=303, response_class=RedirectResponse)
 async def create_subscription(request: Request):
+    if not Session.is_valid(request.session, 4):
+        return RedirectResponse("/step-1", status_code=303)
     return "/confirmation"
 
 
 @app.get("/confirmation", response_class=HTMLResponse)
 async def confirmation(request: Request):
+    if not Session.is_valid(request.session, 4):
+        return RedirectResponse("/step-1", status_code=303)
+    del sessions[request.session["id"]]
     return templates.TemplateResponse(
         request=request,
         name="confirmation.html",

@@ -44,6 +44,18 @@ class Session:
         return total
 
 
+    @classmethod
+    def is_valid(cls, session: dict, step: int = 0):
+        if "id" not in session or session["id"] not in sessions:
+            return False
+        session_data = sessions[session["id"]]
+        if step >= 3:
+            if session_data._plan == {}:
+                return False
+        return True
+
+
+
 sessions = dict[str, Session]()
 
 def clear_inactive_sessions():
@@ -55,8 +67,7 @@ def clear_inactive_sessions():
                 del sessions[key]
 
 
-def is_session_valid(session: dict):
-    return "id" in session and session["id"] in sessions    
+
             
 
 
