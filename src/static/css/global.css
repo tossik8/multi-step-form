@@ -9,7 +9,6 @@
     --blue-100: hsl(218, 100%, 97%);
     --blue-50: hsl(231, 100%, 99%);
     --white: hsl(0, 100%, 100%);
-    --desktop-bp: 767px;
 }
 
 @font-face {
