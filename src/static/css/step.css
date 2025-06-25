@@ -2,7 +2,7 @@
     display: flex;
 }
 
-.step__details {
+.step__content {
     display: none;
 }
 
@@ -30,16 +30,16 @@
         gap: 1rem;
     }
     
-    .step__details {
+    .step__content {
         display: block;
     }
     
-    .step__number,
+    .step__label,
     .step__description {
         text-transform: uppercase;
     }
     
-    .step__number {
+    .step__label {
         font-weight: 300;
         color: var(--blue-300);
     }

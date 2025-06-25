@@ -46,4 +46,5 @@
 .summary__total-price {
     color: var(--purple-600);
     font-weight: 700;
+    font-size: 1.5rem;
 }

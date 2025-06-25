@@ -38,6 +38,10 @@
     .nav-buttons__next {
         cursor: pointer;
     }
+
+    .nav-buttons__back:hover {
+        color: var(--blue-950);
+    }
 }
 
 @media screen and (min-width: 767px) {

@@ -1,11 +1,11 @@
 {% macro step(step, description, active) %}
-    <div class="step">
-         <div class="step__circle {% if active %}step__circle_active{% endif %}">
-            <span>{{ step }}</span>
-        </div>
-        <div class="step__details">
-            <p class="step__number">Step {{ step }}</p>
-            <p class="step__description">{{ description }}</p>
-        </div>
-    </div>   
+<div class="step">
+    <div class="step__circle {% if active %}step__circle_active{% endif %}">
+        <span>{{ step }}</span>
+    </div>
+    <div class="step__content">
+        <p class="step__label">Step {{ step }}</p>
+        <p class="step__description">{{ description }}</p>
+    </div>
+</div>
 {%- endmacro %}

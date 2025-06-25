@@ -1,4 +1,4 @@
-.text-input__info {
+.text-input__header {
     display: flex;
     justify-content: space-between;
 }
@@ -20,6 +20,7 @@
 
 .text-input__input {
     outline: none;
+    color: var(--blue-950);
     font-weight: 700;
     padding: 1rem;
     border-radius: 0.25rem;

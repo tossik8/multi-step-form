@@ -28,14 +28,16 @@
     <main>
         {% block main_content %}
         {% from "macros/step.html" import step %}
-        <div id="form-container" class="form-container">
+        <div id="form-container" class="main__inner">
             <aside class="sidebar">
                 {{ step(1, "Your info", next == 1) }}
                 {{ step(2, "Select plan", next == 2) }}
                 {{ step(3, "Add-ons", next == 3) }}
                 {{ step(4, "Summary", next == 4) }}
             </aside>
-            {% include form_step_template %}
+            <div class="content">
+                {% include form_step_template %}
+            </div>
         </div>
         {% endblock %}
     </main>

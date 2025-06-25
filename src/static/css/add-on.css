@@ -22,11 +22,11 @@
     accent-color: var(--purple-600);
 }
 
-.add-on__details {
+.add-on__content {
     flex: 1;
 }
 
-.add-on__title {
+.add-on__label {
     color: var(--blue-950);
     font-weight: 500;
 }
