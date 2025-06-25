@@ -170,13 +170,12 @@ async def step3(request: Request):
     session = sessions[request.session["id"]]
     session.update_last_activity_time()
     context = get_step_context(3, session)
-    template = "index.html"
     block_name = None
     if "Hx-Current-Url" in request.headers:
         block_name = "main_content"
     return templates.TemplateResponse(
         request=request,
-        name=template,
+        name="index.html",
         context=context,
         block_name=block_name
     )
@@ -206,11 +205,14 @@ async def step4(request: Request):
         context["total"] = {"yearly": total}
     else:
         context["total"] = {"monthly": total}
+    block_name = None
+    if "Hx-Current-Url" in request.headers:
+        block_name = "main_content"
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context=context,
-        block_name="main_content"
+        block_name=block_name
     )
 
 
