@@ -10,7 +10,8 @@
     <button
         class="nav-buttons__next"
         hx-post="/step-{{ next }}"
-        hx-target="main"
+        hx-target="{% if next == 4 %}closest .content{% else %}main{% endif %}"
+        {% if next == 4 %}hx-swap="outerHTML"{% endif %}
         hx-target-error="#form-fields"
         hx-push-url="true"
     >{% if next == 4 %}Confirm{% else %}Next Step{% endif %}</button>

@@ -76,6 +76,20 @@ main {
     padding-top: 2rem;   
 }
 
+.content_confirmation {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.content__img {
+    width: min-content;
+    height: min-content;
+}
+
 .content__title {
     color: var(--blue-950);
 }
@@ -83,6 +97,10 @@ main {
 .content__description {
     color: var(--grey-500);
     margin: 1rem 0;
+}
+
+.content_confirmation__description {
+    margin: 0;
 }
 
 #form-fields {
@@ -120,6 +138,10 @@ main {
         position: relative;
         margin-top: 3rem;
         padding: var(--padding);
+    }
+
+    .content_confirmation {
+        margin-top: 0;
     }
 
     .billing-plans {

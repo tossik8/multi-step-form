@@ -212,3 +212,16 @@ async def step4(request: Request):
         context=context,
         block_name="main_content"
     )
+
+
+@app.post("/step-4", status_code=303, response_class=RedirectResponse)
+async def create_subscription(request: Request):
+    return "/confirmation"
+
+
+@app.get("/confirmation", response_class=HTMLResponse)
+async def confirmation(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="confirmation.html",
+    )
