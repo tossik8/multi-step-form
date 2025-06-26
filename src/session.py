@@ -67,10 +67,3 @@ def clear_inactive_sessions():
         for key in list(sessions.keys()):
             if time.time() - sessions[key].last_activity_time > interval:
                 del sessions[key]
-
-
-
-            
-
-
-    
