@@ -5,6 +5,7 @@ This is a solution to the [Multi-step form challenge on Frontend Mentor](https:/
 ## Table of contents
 
 - [The challenge](#the-challenge)
+- [Result](#result)
 - [Links](#links)
 - [Built with](#built-with)
 
@@ -22,12 +23,16 @@ Users should be able to:
   - The email address is not formatted correctly
   - A step is submitted, but no selection has been made
 
+## Result
+
+![First step of the form](first-form-step.png)
+
 ## Links
 
 - Solution URL: [https://github.com/tossik8/multi-step-form](https://github.com/tossik8/multi-step-form)
 - Live Site URL: [https://multi-step-form-h7x5.onrender.com/step-1](https://multi-step-form-h7x5.onrender.com/step-1)
 
-*Note*: The site is hosted with a free hosting plan and is spun down after a period of inactivity. This means that it might take some extra time for the page to load initially, but there should be no delay after that. 
+**Note**: The site is hosted with a free hosting plan and is spun down after a period of inactivity. This means that it might take some extra time for the page to load initially, but there should be no delay after that. 
 
 ## Built with
 
