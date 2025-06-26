@@ -1,9 +1,15 @@
-{% macro text_input(name, placeholder, label, errors, value = "") %}
+{% macro text_input(name, placeholder, label, value) %}
 <div class="text-input">
     <div class="text-input__header">
         <label class="text-input__label" for="{{ name }}">{{ label }}</label>
         {% if name in errors %}
-        <span class="text-input__error">The field is required</span>
+        <span class="text-input__error">
+            {% if name == "email" %}
+            Not a valid email
+            {% else %}
+            The field is required
+            {% endif %}
+        </span>   
         {% endif %}
     </div>
     <input

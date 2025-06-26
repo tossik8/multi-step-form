@@ -11,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 from jinja2_fragments.fastapi import Jinja2Blocks
 from starlette.middleware.sessions import SessionMiddleware
-from pydantic import StringConstraints, ValidationError
+from pydantic import StringConstraints, EmailStr, ValidationError
 
 from session import sessions, Session, clear_inactive_sessions
 from data import get_plans, get_add_ons
@@ -61,17 +61,18 @@ def get_step_context(step, session: Session | None = None) -> dict:
 
 @app.exception_handler(RequestValidationError)
 async def handle_validation_exception(request: Request, exc: ValidationError):
-    step = re.search("\\d", request.state.template)
-    if step:
-        context = get_step_context(
-            int(step.group(0)),
-            sessions[request.session["id"]] if Session.is_valid(request.session) else None
-        )
-    fields = [error["loc"][1] for error in exc.errors()]
-    form_data = await request.form()
-    for key in form_data:
-        context[key] = form_data.get(key)
-    context["errors"] = fields
+    match = re.search("\\d", request.state.template)
+    if match:
+        step = int(match.group(0))
+        session = request.session
+        if Session.is_valid(session):
+            context = get_step_context(step, sessions[session["id"]])
+        else:
+            context = get_step_context(step)
+            form_data = await request.form()
+            for key in form_data:
+                context[key] = form_data.get(key)
+    context["errors"] = [error["loc"][1] for error in exc.errors()]
     return templates.TemplateResponse(
         request=request,
         name=request.state.template,
@@ -113,7 +114,7 @@ async def step1(request: Request):
 async def submit_personal_info(
     request: Request,
     name: Annotated[TrimmedStr, Form()],
-    email: Annotated[TrimmedStr, Form()],
+    email: Annotated[EmailStr, Form()],
     tel: Annotated[TrimmedStr, Form()],
     _ = Depends(set_error_template("form-step-1.html"))
 ):
