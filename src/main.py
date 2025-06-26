@@ -223,14 +223,16 @@ async def step4(request: Request):
 async def create_subscription(request: Request):
     if not Session.is_valid(request.session, 4):
         return RedirectResponse("/step-1", status_code=303)
+    sessions[request.session["id"]].deleted = True
     return "/confirmation"
 
 
 @app.get("/confirmation", response_class=HTMLResponse)
 async def confirmation(request: Request):
-    if not Session.is_valid(request.session, 4):
+    if not Session.is_valid(request.session, 5):
         return RedirectResponse("/step-1", status_code=303)
     del sessions[request.session["id"]]
+    request.session.clear()
     return templates.TemplateResponse(
         request=request,
         name="confirmation.html",

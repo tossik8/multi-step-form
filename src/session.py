@@ -13,7 +13,7 @@ class Session:
         self.add_on_ids = []
         self._add_ons = []
         self.update_last_activity_time()
-
+        self.deleted = False
     
     def update_last_activity_time(self):
         self.last_activity_time = time.time()
@@ -52,6 +52,8 @@ class Session:
         if step >= 3:
             if session_data._plan == {}:
                 return False
+        if step >= 5:
+            return session_data.deleted
         return True
 
 
