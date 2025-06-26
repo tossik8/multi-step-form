@@ -44,10 +44,6 @@
     background-color: var(--white);
 }
 
-.toggle__label > span {
-    visibility: hidden;
-}
-
 .toggle__input {
     appearance: none;
 }

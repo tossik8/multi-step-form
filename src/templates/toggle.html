@@ -10,8 +10,9 @@
             hx-get="/step-2"
             hx-target="#form-fields"
             hx-include="previous input:checked"
+            aria-label="toggle"
         />
-        <label for="toggle" class="toggle__label"><span>Toggle</span></label>
+        <label for="toggle" class="toggle__label"></label>
     </div>
     <span class="toggle-container__span {% if yearly %}toggle-container__span_active{% endif %}">Yearly</span>
 </div>
