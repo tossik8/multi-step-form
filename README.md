@@ -25,7 +25,9 @@ Users should be able to:
 ## Links
 
 - Solution URL: [https://github.com/tossik8/multi-step-form](https://github.com/tossik8/multi-step-form)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [https://multi-step-form-h7x5.onrender.com/step-1](https://multi-step-form-h7x5.onrender.com/step-1)
+
+*Note*: The site is hosted with a free hosting plan and is spun down after a period of inactivity. This means that it might take some extra time for the page to load initially, but there should be no delay after that. 
 
 ## Built with
 
