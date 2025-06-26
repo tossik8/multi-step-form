@@ -83,20 +83,25 @@ async def handle_validation_exception(request: Request, exc: ValidationError):
 
 @app.get("/step-1", response_class=HTMLResponse)
 async def step1(request: Request):
-    if Session.is_valid(request.session):
+    valid = Session.is_valid(request.session)
+    if valid:
         session = sessions[request.session["id"]]
         session.update_last_activity_time()
         context = get_step_context(1, session)
     else:
-        context = get_step_context(1) 
+        context = get_step_context(1)
+    headers = {}
     block_name = None
     if "Hx-Current-Url" in request.headers:
         block_name = "main_content"
+        if request.headers["Hx-Current-Url"].endswith("/step-4"):
+            headers.update({"Hx-Retarget": "main", "Hx-Reswap": "innerHTML"})
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context=context,
-        block_name=block_name
+        block_name=block_name,
+        headers=headers
     )
 
 
