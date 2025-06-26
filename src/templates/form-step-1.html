@@ -4,9 +4,9 @@
     <div id="form-fields">
         {% block form_fields %}
         {% from "macros/text-input.html" import text_input %}
-        {{ text_input("name", "e.g. Stephen King", "Name", errors, data.name if data) }}
-        {{ text_input("email", "e.g. stephenking@lorem.com", "Email Address", errors, data.email if data) }}
-        {{ text_input("tel", "e.g. +1 234 567 890", "Phone Number", errors, data.tel if data) }}
+        {{ text_input("name", "e.g. Stephen King", "Name", errors, data.name if data else name) }}
+        {{ text_input("email", "e.g. stephenking@lorem.com", "Email Address", errors, data.email if data else email) }}
+        {{ text_input("tel", "e.g. +1 234 567 890", "Phone Number", errors, data.tel if data else tel) }}
         {% endblock %}
     </div>
     {% include "nav-buttons.html" %}
