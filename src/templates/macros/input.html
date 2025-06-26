@@ -1,9 +1,9 @@
-{% macro text_input(name, placeholder, label, value) %}
-<div class="text-input">
-    <div class="text-input__header">
-        <label class="text-input__label" for="{{ name }}">{{ label }}</label>
+{% macro input(type, name, placeholder, label, value) %}
+<div class="input">
+    <div class="input__header">
+        <label class="input__label" for="{{ name }}">{{ label }}</label>
         {% if name in errors %}
-        <span class="text-input__error">
+        <span class="input__error">
             {% if name == "email" %}
             Not a valid email
             {% else %}
@@ -13,8 +13,8 @@
         {% endif %}
     </div>
     <input
-        type="text"
-        class="text-input__input {% if name in errors %}text-input__input_error{% endif %}"
+        type="{{ type }}"
+        class="input__input {% if name in errors %}input__input_error{% endif %}"
         id="{{ name }}"
         name="{{ name }}"
         autocomplete="{{ name }}"

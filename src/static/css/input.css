@@ -1,24 +1,24 @@
-.text-input__header {
+.input__header {
     display: flex;
     justify-content: space-between;
 }
 
-.text-input__label,
-.text-input__error {
+.input__label,
+.input__error {
     font-size: 0.75rem;
 }
 
-.text-input__label {
+.input__label {
     color: var(--blue-950);
     margin-bottom: 0.25rem;
 }
 
-.text-input__error {
+.input__error {
     color: var(--red-500);
     font-weight: 500;
 }
 
-.text-input__input {
+.input__input {
     outline: none;
     color: var(--blue-950);
     font-weight: 700;
@@ -28,14 +28,14 @@
     width: 100%;
 }
 
-.text-input__input_error {
+.input__input_error {
     border-color: var(--red-500);
 }
 
-.text-input__input::placeholder {
+.input__input::placeholder {
     color: var(--grey-500);
 }
 
-.text-input__input:focus {
+.input__input:focus {
     border-color: var(--purple-600);
 }
