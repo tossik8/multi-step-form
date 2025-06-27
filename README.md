@@ -38,7 +38,9 @@ Users should be able to:
 
 - Semantic HTML5 markup
 - CSS custom properties
+- Mobile-first workflow
 - [HTMX](https://htmx.org/) - JS library
 - [Jinja](https://jinja.palletsprojects.com/) - Templating engine
 - [FastAPI](https://fastapi.tiangolo.com/) - Web framework
-- Mobile-first workflow
+- [Docker](https://www.docker.com/) - Containerization platform
+- [Redis](https://redis.io/) - Key-value database

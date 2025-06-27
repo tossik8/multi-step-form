@@ -1,3 +1,4 @@
+import os
 from typing_extensions import Self
 
 import redis
@@ -13,7 +14,11 @@ class SessionsCache:
     def __new__(cls) -> Self:
         if not cls._instance:
             cls._instance = super().__new__(cls)
-            cls._conn = redis.Redis(host="localhost", port=6379, password="mysecretpw", decode_responses=True)
+            host = os.getenv("REDIS_HOST")
+            port = os.getenv("REDIS_PORT")
+            password = os.getenv("REDIS_PW")
+            assert host is not None and port is not None and password is not None
+            cls._conn = redis.Redis(host=host, port=int(port), password=password, decode_responses=True)
         return cls._instance
     
 

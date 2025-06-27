@@ -1,7 +1,10 @@
+import os
 import re
 from pathlib import Path
 from typing import Annotated
 import uuid
+from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -20,7 +23,9 @@ ROOT_DIR = Path(__file__).resolve().parent
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory=f"{ROOT_DIR}/static"), name="static")
-app.add_middleware(SessionMiddleware, secret_key="mysecret", max_age=None)
+session_middleware_key = os.getenv("SESSION_MIDDLEWARE_KEY")
+assert session_middleware_key is not None
+app.add_middleware(SessionMiddleware, secret_key=session_middleware_key, max_age=None)
 
 cache = SessionsCache()
 
