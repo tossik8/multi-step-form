@@ -116,6 +116,7 @@ async def submit_personal_info(
 ):
     session = get_valid_session(request.session)
     if session:
+        session_id = request.session["id"]
         session.name = name
         session.email = email
         session.tel = tel
