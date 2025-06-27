@@ -8,6 +8,7 @@
     >Go Back</a>
     {% endif %}
     <button
+        type="submit"
         class="nav-buttons__next"
         hx-post="/step-{{ next }}"
         {% if next == 4 %}
