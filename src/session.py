@@ -1,22 +1,18 @@
-import time
+import json
+from dataclasses import dataclass, field
 
 
+@dataclass
 class Session:
-
-    def __init__(self, name = "", email = "", tel = ""):
-        self.name = name
-        self.email = email
-        self.tel = tel
-        self.plan_id = 1
-        self._plan = {}
-        self.yearly = False
-        self.add_on_ids = []
-        self._add_ons = []
-        self.update_last_activity_time()
-        self.deleted = False
-    
-    def update_last_activity_time(self):
-        self.last_activity_time = time.time()
+    name: str
+    email: str
+    tel: str
+    plan_id: int = 1
+    _plan: dict = field(default_factory=dict)
+    yearly: bool = False
+    add_on_ids: list[int] = field(default_factory=list)
+    _add_ons: list[dict] = field(default_factory=list)
+    deleted: bool = False
 
     
     def find_plan(self, plans):
@@ -42,28 +38,13 @@ class Session:
         for add_on in self._add_ons:
             total += self._get_price(add_on["price"])
         return total
+    
+
+    def serialize(self):
+        return json.dumps(vars(self))
 
 
     @classmethod
-    def is_valid(cls, session: dict, step: int = 0):
-        if "id" not in session or session["id"] not in sessions:
-            return False
-        session_data = sessions[session["id"]]
-        if step >= 3:
-            if session_data._plan == {}:
-                return False
-        if step >= 5:
-            return session_data.deleted
-        return True
+    def deserialize(cls, session: str):
+        return cls(**json.loads(session))
 
-
-
-sessions = dict[str, Session]()
-
-def clear_inactive_sessions():
-    interval = 5 * 60
-    while True:
-        time.sleep(interval)
-        for key in list(sessions.keys()):
-            if time.time() - sessions[key].last_activity_time > interval:
-                del sessions[key]

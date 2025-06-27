@@ -1,8 +1,6 @@
 import re
-import threading
 from pathlib import Path
 from typing import Annotated
-from contextlib import asynccontextmanager
 import uuid
 
 from fastapi import FastAPI, Request, Form, Depends
@@ -13,23 +11,18 @@ from jinja2_fragments.fastapi import Jinja2Blocks
 from starlette.middleware.sessions import SessionMiddleware
 from pydantic import StringConstraints, EmailStr, ValidationError
 
-from session import sessions, Session, clear_inactive_sessions
+from session import Session
+from sessions import SessionsCache
 from data import get_plans, get_add_ons
 
 ROOT_DIR = Path(__file__).resolve().parent
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    t = threading.Thread(target=clear_inactive_sessions)
-    t.start()
-    yield
-
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 app.mount("/static", StaticFiles(directory=f"{ROOT_DIR}/static"), name="static")
 app.add_middleware(SessionMiddleware, secret_key="mysecret", max_age=None)
 
+cache = SessionsCache()
 
 templates = Jinja2Blocks(directory=f"{ROOT_DIR}/templates")
 
@@ -42,16 +35,12 @@ def set_error_template(template_name: str):
     return _set_template
 
 
-def get_step_context(step, session: Session | None = None) -> dict:
+def get_step_context(step) -> dict:
     context: dict = {"form_step_template": f"form-step-{step}.html"}
-    if session:
-        context["data"] = session
     if step == 1:
         context["next"] = 1
     elif step == 2:
         context.update({"back": 1, "next": 2, "plans": get_plans()})
-        if session:
-            context.update({"yearly": session.yearly, "plan_id": session.plan_id})
     elif step == 3:
         context.update({"back": 2, "next": 3, "add_ons": get_add_ons()})
     elif step == 4:
@@ -64,14 +53,10 @@ async def handle_validation_exception(request: Request, exc: ValidationError):
     match = re.search("\\d", request.state.template)
     if match:
         step = int(match.group(0))
-        session = request.session
-        if Session.is_valid(session):
-            context = get_step_context(step, sessions[session["id"]])
-        else:
-            context = get_step_context(step)
-            form_data = await request.form()
-            for key in form_data:
-                context[key] = form_data.get(key)
+        context = get_step_context(step)
+    form_data = await request.form()
+    for key in form_data:
+        context[key] = form_data.get(key)
     context["errors"] = [error["loc"][1] for error in exc.errors()]
     return templates.TemplateResponse(
         request=request,
@@ -82,15 +67,21 @@ async def handle_validation_exception(request: Request, exc: ValidationError):
     )
 
 
+def get_valid_session(session: dict):
+    if "id" not in session:
+        return None
+    session_data = cache.get_session(session["id"])
+    if session_data is None:
+        return None
+    return session_data
+
+
 @app.get("/step-1", response_class=HTMLResponse)
 async def step1(request: Request):
-    valid = Session.is_valid(request.session)
-    if valid:
-        session = sessions[request.session["id"]]
-        session.update_last_activity_time()
-        context = get_step_context(1, session)
-    else:
-        context = get_step_context(1)
+    context = get_step_context(1)
+    session = get_valid_session(request.session)
+    if session is not None:
+        context["data"] = session
     headers = {}
     block_name = None
     if "Hx-Current-Url" in request.headers:
@@ -118,23 +109,26 @@ async def submit_personal_info(
     tel: Annotated[TrimmedStr, Form()],
     _ = Depends(set_error_template("form-step-1.html"))
 ):
-    if Session.is_valid(request.session):
-        session_id = request.session["id"]
-        sessions[session_id].update_last_activity_time()
+    session = get_valid_session(request.session)
+    if session:
+        session.name = name
+        session.email = email
+        session.tel = tel
     else:
         session_id = str(uuid.uuid1())
         request.session["id"] = session_id
-        sessions[session_id] = Session(name, email, tel)
+        session = Session(name, email, tel)
+    cache.add_session(session_id, session)
     return "/step-2"
 
 
 @app.get("/step-2", response_class=HTMLResponse)
 async def step2(request: Request, plan: int = 1, yearly: bool = False):
-    if not Session.is_valid(request.session):
-        return RedirectResponse("/step-1", status_code=303)
-    session = sessions[request.session["id"]]
-    session.update_last_activity_time()
-    context = get_step_context(2, session)
+    session = get_valid_session(request.session)
+    if not session:
+        return RedirectResponse("/step-1", 303)
+    context = get_step_context(2)
+    context.update({"yearly": session.yearly, "plan_id": session.plan_id})
     template = "index.html"
     block_name = None
     if "Hx-Trigger" in request.headers:
@@ -162,23 +156,23 @@ async def submit_billing_plan(
     plan_id: Annotated[int, Form(alias="plan", validation_alias="plan")],
     yearly: Annotated[bool, Form()] = False
 ):
-    if not Session.is_valid(request.session):
+    session = get_valid_session(request.session)
+    if not session:
         return "/step-1"
-    session = sessions[request.session["id"]]
-    session.update_last_activity_time()
     session.plan_id = plan_id
     session.yearly = yearly
     session.find_plan(get_plans())
+    cache.add_session(request.session["id"], session)
     return "/step-3"
 
 
 @app.get("/step-3", response_class=HTMLResponse)
 async def step3(request: Request):
-    if not Session.is_valid(request.session, 3):
-        return RedirectResponse("/step-1", status_code=303)
-    session = sessions[request.session["id"]]
-    session.update_last_activity_time()
-    context = get_step_context(3, session)
+    session = get_valid_session(request.session)
+    if not session or session._plan == {}:
+        return RedirectResponse("/step-1", 303)
+    context = get_step_context(3)
+    context["data"] = session
     block_name = None
     if "Hx-Current-Url" in request.headers:
         block_name = "main_content"
@@ -195,20 +189,22 @@ async def submit_add_ons(
     request: Request,
     selected_add_ons: Annotated[list[int], Form(alias="add_ons", validation_alias="add_ons")] = []
 ):
-    if not Session.is_valid(request.session, 3):
-        return RedirectResponse("/step-1", status_code=303)
-    session = sessions[request.session["id"]]
+    session = get_valid_session(request.session)
+    if not session or session._plan == {}:
+        return "/step-1"
     session.add_on_ids = selected_add_ons
     session.find_add_ons(get_add_ons())
+    cache.add_session(request.session["id"], session)
     return "/step-4"
 
 
 @app.get("/step-4", response_class=HTMLResponse)
 async def step4(request: Request):
-    if not Session.is_valid(request.session, 4):
-        return RedirectResponse("/step-1", status_code=303)
-    session = sessions[request.session["id"]]
-    context = get_step_context(4, session)
+    session = get_valid_session(request.session)
+    if not session or session._plan == {}:
+        return RedirectResponse("/step-1", 303)
+    context = get_step_context(4)
+    context["data"] = session
     total = session.calculate_total()
     if session.yearly:
         context["total"] = {"yearly": total}
@@ -227,17 +223,20 @@ async def step4(request: Request):
 
 @app.post("/step-4", status_code=303, response_class=RedirectResponse)
 async def create_subscription(request: Request):
-    if not Session.is_valid(request.session, 4):
-        return RedirectResponse("/step-1", status_code=303)
-    sessions[request.session["id"]].deleted = True
+    session = get_valid_session(request.session)
+    if not session or session._plan == {}:
+        return "/step-1"
+    session.deleted = True
+    cache.add_session(request.session["id"], session)
     return "/confirmation"
 
 
 @app.get("/confirmation", response_class=HTMLResponse)
 async def confirmation(request: Request):
-    if not Session.is_valid(request.session, 5):
-        return RedirectResponse("/step-1", status_code=303)
-    del sessions[request.session["id"]]
+    session = get_valid_session(request.session)
+    if not session or not session.deleted:
+        return RedirectResponse("/step-1", 303)
+    cache.delete_session(request.session["id"])
     request.session.clear()
     return templates.TemplateResponse(
         request=request,
